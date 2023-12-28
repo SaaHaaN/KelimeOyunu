@@ -293,22 +293,23 @@
 
         // Oyun bitimi kontrolü (Kazanma ve kaybetme durumları)
         function checkGame() {
-            if (!foundLetters.includes(false) || score >= 3000) {
+            if (!foundLetters.includes(false)) {
                 guessedWords.correct.push(selectedWord);
                 guessedWordDisplay.innerHTML = "Bildiğiniz Kelimeler: " + guessedWords.correct.join(", ");
-                endGame(true, false);
+                endGame(true, false, true);
             }
-
+        
             if (chances === 0) {
                 guessedWords.wrong.push(selectedWord);
                 guessedWordDisplay.innerHTML = "Doğru Bilinen Kelimeler: " + guessedWords.correct.join(", ") + "<br>Yanlış Bilinen Kelimeler: " + guessedWords.wrong.join(", ");
-                endGame(false, false);
+                endGame(false, false, false);
             }
         }
 
-        function endGame(isWinner, fromTimeout) {
+        // Oyun bitimi kontrolü
+        function endGame(isWinner, fromTimeout, isWinnerByScore) {
             keyboard.innerHTML = "";
-
+        
             if (isWinner) {
                 congratulationsMessage.textContent = "Tebrikler! Doğru Kelime!";
             } else {
@@ -321,6 +322,10 @@
                     gameOverMessage.innerHTML = "<span style='color: red; font-size: 24px; cursor: pointer; text-decoration: underline;'>Kaybettiniz -500 puan oldun. Yeni oyuna başlamak için tıklayınız.</span>";
                     gameOverMessage.addEventListener("click", () => resetGame());
                 }
+            }
+        
+            if (isWinnerByScore) {
+                congratulationsMessage.textContent = "Tebrikler! Oyunu 3000 puanla kazandınız!";
             }
         }
 
