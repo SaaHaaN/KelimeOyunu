@@ -146,7 +146,7 @@
     <script>
 
         document.addEventListener("DOMContentLoaded", function () {
-            document.getElementById('project-info').innerText = 'Şahan Aytekin - 2021221033\nİleri Programlama Tenkikleri Proje Ödevi';
+            document.getElementById('project-info').innerText = 'Şahan Aytekin - 2021221033\nİleri Programlama Teknikleri Proje Ödevi';
         });
 
     </script>
@@ -293,7 +293,7 @@
 
         // Oyun durum kontrolü (Kazanma ve kaybetme durumları)
         function checkGame() {
-            if (score >= 3000) {
+            if (score >= 1000) {
                 guessedWords.correct.push(selectedWord);
                 guessedWordDisplay.innerHTML = "Bildiğiniz Kelimeler: " + guessedWords.correct.join(", ");
                 endGame(true, false);
