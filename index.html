@@ -1,288 +1,372 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            min-height: 100vh;
+        }
 
-    #game-container {
-      text-align: center;
-    }
+        header, footer {
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 8px;
+            width: 100%;
+            position: fixed;
+            z-index: 1;
+        }
 
-    #word-display {
-      font-size: 24px;
-      margin: 10px 0;
-    }
+        header {
+            top: 0;
+        }
 
-    #keyboard {
-      display: flex; 
-      flex-wrap: wrap;  
-      justify-content: center;
-    }
+        footer {
+            bottom: 0;
+        }
 
-    .button {
-      margin: 5px;
-      padding: 10px;
-      font-size: 18px;
-      cursor: pointer;
-    }
+        .info-bar {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 2px;
+            position: relative;
+            z-index: 2;
+        }
 
-    .button.disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
+        #game-container {
+            text-align: center;
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
 
-    #correct-letters,
-    #wrong-letters,
-    #score,
-    #remaining-chances,
-    #guessed-word,
-    #game-over-message,
-    #congratulations-message,
-    #countdown {
-      margin: 10px 0;
-      font-weight: bold;
-      color: #333;
-    }
+        .reference-bar {
+            max-width: 960px;
+            margin-right: auto;
+            margin-left: auto;
+            margin-bottom: 10px;
+        }
 
-    #found-letters,
-    #missed-letters,
-    #score-value,
-    #chances {
-      font-weight: bold;
-      color: #333;
-    }
+        .reference-bar a {
+            color: skyblue;
+            text-decoration: none;
+            margin-right: 10px;
+        }
 
-    #countdown {
-      font-size: 36px;
-      color: blue;
-    }
+        #word-display {
+            font-size: 24px;
+            margin: 10px 0;
+        }
 
-    .correct {
-      color: green;
-    }
+        #keyboard {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
 
-    .wrong {
-      color: red;
-    }
+        .button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 18px;
+            cursor: pointer;
+        }
 
-    #game-over-message span {
-      font-size: 24px;
-      color: red;
-      cursor: pointer;
-      text-decoration: underline;
-    }
+        .button.disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
 
-    #new-game-button,
-    #new-word-button {
-      padding: 10px;
-      font-size: 18px;
-      cursor: pointer;
-    }
+        #correct-letters,
+        #wrong-letters,
+        #score,
+        #remaining-chances,
+        #guessed-word,
+        #game-over-message,
+        #congratulations-message,
+        #countdown {
+            margin: 10px 0;
+            font-weight: bold;
+            color: #333;
+        }
 
-    #new-game-button.disabled,
-    #new-word-button.disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
+        #found-letters,
+        #missed-letters,
+        #score-value,
+        #chances {
+            font-weight: bold;
+            color: #333;
+        }
 
-    #button-container {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 20px;
-    }
-  </style>
-  <title>Kelime Bulma Oyunu</title>
+        #countdown {
+            font-size: 36px;
+            color: blue;
+        }
+
+        .correct {
+            color: green;
+        }
+
+        .wrong {
+            color: red;
+        }
+
+        #game-over-message span {
+            font-size: 24px;
+            color: red;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        #new-game-button,
+        #new-word-button {
+            padding: 10px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        #new-game-button.disabled,
+        #new-word-button.disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #button-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+    </style>
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById('project-info').innerText = 'Şahan Aytekin - 2021221033\nİleri Programlama Tenkikleri Proje Ödevi';
+        });
+
+    </script>
+    <title>Kelime Bulma Oyunu</title>
 </head>
 <body>
-  <div id="game-container">
-    <div id="word-display"></div>
-    <div id="keyboard"></div>
-    <div id="correct-letters">Bulunan Harfler: <span id="found-letters"></span></div>
-    <div id="wrong-letters">Bulunmayan Harfler: <span id="missed-letters"></span></div>
-    <div id="score">Puan: <span id="score-value"></span></div>
-    <div id="remaining-chances">Kalan Hak: <span id="chances"></span></div>
-    <div id="guessed-word"></div>
-    <div id="countdown"></div>
-    <div id="game-over-message"></div>
-    <div id="congratulations-message"></div>
-    <div id="button-container">
-      <div id="new-game-button" class="button" onclick="resetGame()">Oyunu Sıfırla</div>
+    <header>
+        <div class="info-bar">
+            <p id="project-info"></p>
+        </div>
+    </header>
+
+    <div id="game-container">
+  
+        <div id="word-display"></div>
+        <div id="keyboard"></div>
+        <div id="correct-letters">Bulunan Harfler: <span id="found-letters"></span></div>
+        <div id="wrong-letters">Bulunmayan Harfler: <span id="missed-letters"></span></div>
+        <div id="score">Puan: <span id="score-value"></span></div>
+        <div id="remaining-chances">Kalan Hak: <span id="chances"></span></div>
+        <div id="guessed-word"></div>
+        <div id="countdown"></div>
+        <div id="game-over-message"></div>
+        <div id="congratulations-message"></div>
+        <div id="button-container">
+            <div id="new-game-button" class="button" onclick="resetGame()">Oyunu Sıfırla</div>
+        </div>
     </div>
-  </div>
 
-  <script>
-    const words = ["JAVASCRIPT", "HTML", "CSS", "WEB", "CODING", "DEVELOPER", "PROGRAMMING", "CHALLENGE", "KEYBOARD", "COMPUTER"];
-    let selectedWord = "";
-    let foundLetters = [];
-    let missedLetters = [];
-    let score = 0;
-    let chances = 10;
-    let guessedWords = {
-      correct: [],
-      wrong: []
-    };
-    let countdownInterval;
-    let countdownValue = 3;
-    let newWordButtonEnabled = true;
+    <footer>
+        <div class="reference-bar">
+            <h2>Referanslar</h2>
+            <a href="https://www.w3schools.com/js/" target="_blank">https://www.w3schools.com/js/</a>
+            <a href="https://devdocs.io/javascript/" target="_blank">https://devdocs.io/javascript/</a>
+            <a href="https://javascript.info/" target="_blank">https://javascript.info/</a>
+            <a href="https://github.com/Asabeneh/30-Days-Of-JavaScript" target="_blank">https://github.com/Asabeneh/30-Days-Of-JavaScript</a>
+        </div>
+    </footer>
 
-    const wordDisplay = document.getElementById("word-display");
-    const keyboard = document.getElementById("keyboard");
-    const foundLettersDisplay = document.getElementById("found-letters");
-    const missedLettersDisplay = document.getElementById("missed-letters");
-    const scoreValueDisplay = document.getElementById("score-value");
-    const chancesDisplay = document.getElementById("chances");
-    const guessedWordDisplay = document.getElementById("guessed-word");
-    const newGameButton = document.getElementById("new-game-button");
-    const congratulationsMessage = document.getElementById("congratulations-message");
-    const countdownDisplay = document.getElementById("countdown");
-    const gameOverMessage = document.getElementById("game-over-message");
+    <script>
+        
+        const words = ["JAVASCRIPT", "HTML", "CSS", "WEB", "CODING", "DEVELOPER", "PROGRAMMING", "CHALLENGE", "KEYBOARD", "COMPUTER"];
+        let selectedWord = "";
+        let foundLetters = [];
+        let missedLetters = [];
+        let score = 0;
+        let chances = 10;
+        let guessedWords = {
+            correct: [],
+            wrong: []
+        };
+        let countdownInterval;
+        let countdownValue = 3;
+        let newWordButtonEnabled = true;
 
-    startGame();
+        // Değişkenler...
+        const wordDisplay = document.getElementById("word-display");
+        const keyboard = document.getElementById("keyboard");
+        const foundLettersDisplay = document.getElementById("found-letters");
+        const missedLettersDisplay = document.getElementById("missed-letters");
+        const scoreValueDisplay = document.getElementById("score-value");
+        const chancesDisplay = document.getElementById("chances");
+        const guessedWordDisplay = document.getElementById("guessed-word");
+        const newGameButton = document.getElementById("new-game-button");
+        const congratulationsMessage = document.getElementById("congratulations-message");
+        const countdownDisplay = document.getElementById("countdown");
+        const gameOverMessage = document.getElementById("game-over-message");
 
-    function createKeyboard() {
-      keyboard.innerHTML = "";
-      for (let i = 65; i <= 90; i++) {
-        const letter = String.fromCharCode(i);
-        const button = document.createElement("div");
-        button.textContent = letter;
-        button.classList.add("button");
-        button.addEventListener("click", () => checkLetter(letter, button));
-        keyboard.appendChild(button);
-      }
-    }
-
-    function checkLetter(letter, button) {
-      if (selectedWord.includes(letter) && !missedLetters.includes(letter) && !foundLetters[selectedWord.indexOf(letter)]) {
-        for (let i = 0; i < selectedWord.length; i++) {
-          if (selectedWord[i] === letter) {
-            foundLetters[i] = true;
-          }
-        }
-
-        button.classList.add("disabled", "correct");
-        button.removeEventListener("click", () => checkLetter(letter, button));
-        score += 100;
-
-      } else if (!missedLetters.includes(letter)) {
-        missedLetters.push(letter);
-        chances--;
-
-        if (score <= -1000) {
-          endGame(false, true);
-        } else {
-          button.classList.add("disabled", "wrong");
-          button.removeEventListener("click", () => checkLetter(letter, button));
-          score -= 100;
-        }
-      }
-
-      updateDisplay();
-      checkGame();
-    }
-
-    function updateDisplay() {
-      wordDisplay.innerHTML = "";
-      for (let i = 0; i < selectedWord.length; i++) {
-        if (foundLetters[i]) {
-          wordDisplay.innerHTML += `<span class="correct">${selectedWord[i]}</span> `;
-        } else {
-          wordDisplay.innerHTML += "_ ";
-        }
-      }
-      foundLettersDisplay.textContent = selectedWord.split("").filter((letter, index) => foundLetters[index]).join(", ");
-      missedLettersDisplay.textContent = missedLetters.join(", ");
-      scoreValueDisplay.textContent = score;
-      chancesDisplay.textContent = chances;
-
-      if (!foundLetters.includes(false) || chances === 0) {
-        if (!foundLetters.includes(false)) {
-          countdownDisplay.textContent = "3";
-          countdownInterval = setInterval(() => {
-            countdownValue--;
-            countdownDisplay.textContent = countdownValue;
-            if (countdownValue === 0) {
-              clearInterval(countdownInterval);
-              countdownDisplay.textContent = "";
-              startGame();
-            }
-          }, 1000);
-        }
-      }
-    }
-
-    function checkGame() {
-      if (!foundLetters.includes(false) || score >= 3000) {
-        guessedWords.correct.push(selectedWord);
-        guessedWordDisplay.innerHTML = "Bildiğiniz Kelimeler: " + guessedWords.correct.join(", ");
-        endGame(true, false);
-      }
-
-      if (chances === 0) {
-        guessedWords.wrong.push(selectedWord);
-        guessedWordDisplay.innerHTML = "Doğru Bilinen Kelimeler: " + guessedWords.correct.join(", ") + "<br>Yanlış Bilinen Kelimeler: " + guessedWords.wrong.join(", ");
-        endGame(false, false);
-      }
-    }
-
-    function endGame(isWinner, fromTimeout) {
-      keyboard.innerHTML = "";
-
-      if (isWinner) {
-        congratulationsMessage.textContent = "Tebrikler! Doğru Kelime!";
-      } else {
-        if (chances === 0) {
-          if (!fromTimeout) {
-            gameOverMessage.innerHTML = "<span style='color: red; font-size: 24px;'>Hakkınız Bitti!</span>";
-            gameOverMessage.addEventListener("click", () => resetGame());
-          }
-        } else if (score <= -1000) {
-          gameOverMessage.innerHTML = "<span style='color: red; font-size: 24px; cursor: pointer; text-decoration: underline;'>Kaybettiniz -500 puan oldun. Yeni oyuna başlamak için tıklayınız.</span>";
-          gameOverMessage.addEventListener("click", () => resetGame());
-        }
-      }
-    }
-
-    function resetDisplay() {
-      wordDisplay.innerHTML = "";
-      foundLettersDisplay.textContent = "";
-      missedLettersDisplay.textContent = "";
-      scoreValueDisplay.textContent = "";
-      chancesDisplay.textContent = "";
-      guessedWordDisplay.textContent = "";
-      congratulationsMessage.textContent = "";
-      countdownDisplay.textContent = "";
-      gameOverMessage.textContent = "";
-    }
-
-    function startGame() {
-      selectedWord = words[Math.floor(Math.random() * words.length)];
-      foundLetters = Array(selectedWord.length).fill(false);
-      missedLetters = [];
-      chances = 10;
-      countdownValue = 3;
-      newWordButtonEnabled = true;
-
-      updateDisplay();
-      createKeyboard();
-    }
-
-    function resetGame() {
-      const confirmation = window.confirm("Oyuna başlamak istiyor musunuz?");
-      if (confirmation) {
-        score = 0;
-        resetDisplay();
         startGame();
-      }
-    }
-  </script>
+
+        // Klavye oluşturma
+        function createKeyboard() {
+            keyboard.innerHTML = "";
+            for (let i = 65; i <= 90; i++) {
+                const letter = String.fromCharCode(i);
+                const button = document.createElement("div");
+                button.textContent = letter;
+                button.classList.add("button");
+                button.addEventListener("click", () => checkLetter(letter, button));
+                keyboard.appendChild(button);
+            }
+        }
+
+        // Harf kontrolü
+        function checkLetter(letter, button) {
+            if (selectedWord.includes(letter) && !missedLetters.includes(letter) && !foundLetters[selectedWord.indexOf(letter)]) {
+                for (let i = 0; i < selectedWord.length; i++) {
+                    if (selectedWord[i] === letter) {
+                        foundLetters[i] = true;
+                    }
+                }
+
+                button.classList.add("disabled", "correct");
+                button.removeEventListener("click", () => checkLetter(letter, button));
+                score += 100;
+
+            } else if (!missedLetters.includes(letter)) {
+                missedLetters.push(letter);
+                chances--;
+
+                if (score <= -1000) {
+                    endGame(false, true);
+                } else {
+                    button.classList.add("disabled", "wrong");
+                    button.removeEventListener("click", () => checkLetter(letter, button));
+                    score -= 100;
+                }
+            }
+
+            updateDisplay();
+            checkGame();
+        }
+
+        // Ekran güncelleme
+        function updateDisplay() {
+            wordDisplay.innerHTML = "";
+            for (let i = 0; i < selectedWord.length; i++) {
+                if (foundLetters[i]) {
+                    wordDisplay.innerHTML += `<span class="correct">${selectedWord[i]}</span> `;
+                } else {
+                    wordDisplay.innerHTML += "_ ";
+                }
+            }
+            foundLettersDisplay.textContent = selectedWord.split("").filter((letter, index) => foundLetters[index]).join(", ");
+            missedLettersDisplay.textContent = missedLetters.join(", ");
+            scoreValueDisplay.textContent = score;
+            chancesDisplay.textContent = chances;
+
+            if (!foundLetters.includes(false) || chances === 0) {
+                if (!foundLetters.includes(false)) {
+                    countdownDisplay.textContent = "3";
+                    countdownInterval = setInterval(() => {
+                        countdownValue--;
+                        countdownDisplay.textContent = countdownValue;
+                        if (countdownValue === 0) {
+                            clearInterval(countdownInterval);
+                            countdownDisplay.textContent = "";
+                            startGame();
+                        }
+                    }, 1000);
+                }
+            }
+        }
+
+        // Oyun bitimi kontrolü (Kazanma ve kaybetme durumları)
+        function checkGame() {
+            if (!foundLetters.includes(false) || score >= 3000) {
+                guessedWords.correct.push(selectedWord);
+                guessedWordDisplay.innerHTML = "Bildiğiniz Kelimeler: " + guessedWords.correct.join(", ");
+                endGame(true, false);
+            }
+
+            if (chances === 0) {
+                guessedWords.wrong.push(selectedWord);
+                guessedWordDisplay.innerHTML = "Doğru Bilinen Kelimeler: " + guessedWords.correct.join(", ") + "<br>Yanlış Bilinen Kelimeler: " + guessedWords.wrong.join(", ");
+                endGame(false, false);
+            }
+        }
+
+        function endGame(isWinner, fromTimeout) {
+            keyboard.innerHTML = "";
+
+            if (isWinner) {
+                congratulationsMessage.textContent = "Tebrikler! Doğru Kelime!";
+            } else {
+                if (chances === 0) {
+                    if (!fromTimeout) {
+                        gameOverMessage.innerHTML = "<span style='color: red; font-size: 24px;'>Hakkınız Bitti!</span>";
+                        gameOverMessage.addEventListener("click", () => resetGame());
+                    }
+                } else if (score <= -1000) {
+                    gameOverMessage.innerHTML = "<span style='color: red; font-size: 24px; cursor: pointer; text-decoration: underline;'>Kaybettiniz -500 puan oldun. Yeni oyuna başlamak için tıklayınız.</span>";
+                    gameOverMessage.addEventListener("click", () => resetGame());
+                }
+            }
+        }
+
+        // Oyunu sıfırlama
+        function resetDisplay() {
+            wordDisplay.innerHTML = "";
+            foundLettersDisplay.textContent = "";
+            missedLettersDisplay.textContent = "";
+            scoreValueDisplay.textContent = "";
+            chancesDisplay.textContent = "";
+            guessedWordDisplay.textContent = "";
+            congratulationsMessage.textContent = "";
+            countdownDisplay.textContent = "";
+            gameOverMessage.textContent = "";
+
+            
+        }
+
+        // Oyunu başlatma
+        function startGame() {
+            selectedWord = words[Math.floor(Math.random() * words.length)];
+            foundLetters = Array(selectedWord.length).fill(false);
+            missedLetters = [];
+            chances = 10;
+            countdownValue = 3;
+            newWordButtonEnabled = true;
+
+            updateDisplay();
+            createKeyboard();
+        }
+
+        // Oyunu sıfırlama
+        function resetGame() {
+            const confirmation = window.confirm("Oyuna başlamak istiyor musunuz?");
+            if (confirmation) {
+                score = 0;
+                resetDisplay();
+                
+                guessedWords = {
+                    correct: [],
+                    wrong: []
+                };
+                guessedWordDisplay.innerHTML = "";
+                startGame();
+            }
+        }
+    </script>
 </body>
 </html>
