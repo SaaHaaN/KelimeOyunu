@@ -43,6 +43,13 @@
             z-index: 2;
         }
 
+        #game-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: aqua;
+            margin: 0;
+        }
+
         #game-container {
             text-align: center;
             margin-top: 50px;
@@ -144,6 +151,31 @@
             justify-content: space-around;
             margin-top: 20px;
         }
+
+        #rules-tooltip {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 42px;
+            color: cadetblue;
+            cursor: pointer;
+            padding: 1px;
+            z-index: 2;
+        }
+
+        #rules-tooltip-content {
+            display: none;
+            position: fixed;
+            top: 50px;
+            right: 40px;
+            font-size: 18px;
+            color: cadetblue;
+            padding: 15px;
+            z-index: 2;
+            border-radius: 20px;
+            border: 2px solid cadetblue;
+            background-color: white;
+        }
     </style>
     <script>
 
@@ -159,9 +191,12 @@
     <header>
         <div class="info-bar">
             <p id="project-info"></p>
+            <p id="game-title">Kelime Bulma Oyunu</p>
         </div>
+
     </header>
 
+    <!-- Oyun alanı -->
     <div id="game-container">
 
         <div id="word-display"></div>
@@ -178,6 +213,27 @@
             <div id="new-game-button" class="button" onclick="resetGame()">Oyunu Sıfırla</div>
         </div>
     </div>
+
+    <div id="rules-tooltip" onmouseover="showRules()" onmouseout="hideRules()">?</div>
+
+    <!-- Kuralların görüntülendiği bölüm -->
+    <div id="rules-tooltip-content" style="display: none;">
+        <h2>Kelime Oyununa Hoşgeldin</h2>
+        <p>Oyunu oynamak için klavyedeki harfleri kullanın.</p>
+        <p>Kurallar:</p>
+        <ul>
+            <li>Bulunan harfler yeşil renkte gösterilir.</li>
+            <li>Bulunmayan harfler kırmızı renkte gösterilir.</li>
+            <li>Oyunu kazanmak için 2000 puanı geçmelisiniz.</li>
+            <li>Hakkınız bittiğinde oyun sona erer.</li>
+            <li>Her doğru harf için 100 puan kazanırsınız.</li>
+            <li>Her yanlış harf için 100 puan kaybedersiniz.</li>
+            <li>Her 1000 puan kaybettiğinizde oyun sona erer.</li>
+            <li>Bildiğiniz kelimeler altta görüntülenir.</li>
+        </ul>
+    </div>
+
+
 
     <footer>
         <div class="reference-bar">
@@ -425,7 +481,7 @@
                 if (loadingMessageElement) {
                     loadingMessageElement.parentNode.removeChild(loadingMessageElement);
 
-                    // Ek olarak, kazandınız mesajını ve bildiğiniz kelimeleri temizle
+                    // Kazandınız mesajını yaz kaldır
                     const congratulationsMessageElement = document.getElementById("congratulations-message");
                     if (congratulationsMessageElement) {
                         congratulationsMessageElement.textContent = "";
@@ -443,6 +499,19 @@
             }, 2000);
         }
 
+        // Kuralların görüntülenmesi
+        document.addEventListener("DOMContentLoaded", function () {
+            const rulesTooltip = document.getElementById("rules-tooltip");
+            const rulesTooltipContent = document.getElementById("rules-tooltip-content");
+
+            rulesTooltip.addEventListener("mouseover", function () {
+                rulesTooltipContent.style.display = "block";
+            });
+
+            rulesTooltip.addEventListener("mouseout", function () {
+                rulesTooltipContent.style.display = "none";
+            });
+        });
 
     </script>
 </body>
