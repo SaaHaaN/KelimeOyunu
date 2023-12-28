@@ -184,7 +184,6 @@
             <h2>Referanslar</h2>
             <a href="https://www.w3schools.com/js/" target="_blank">https://www.w3schools.com/js/</a>
             <a href="https://devdocs.io/javascript/" target="_blank">https://devdocs.io/javascript/</a>
-            <a href="https://javascript.info/" target="_blank">https://javascript.info/</a>
             <a href="https://github.com/Asabeneh/30-Days-Of-JavaScript"
                 target="_blank">https://github.com/Asabeneh/30-Days-Of-JavaScript</a>
         </div>
@@ -297,7 +296,7 @@
 
         // Oyun bitimi kontrolü (Kazanma ve kaybetme durumları)
         function checkGame() {
-            if (score >= 1000) {
+            if (score >= 500 && !foundLetters.includes(false)) {
                 guessedWords.correct.push(selectedWord);
                 guessedWordDisplay.innerHTML = "Bildiğiniz Kelimeler: " + guessedWords.correct.join(", ");
                 endGame(true, false);
@@ -326,8 +325,22 @@
             keyboard.innerHTML = "";
 
             if (isWinner) {
-                if (score >= 1000) {
+                if (score >= 500) {
                     congratulationsMessage.textContent = "Tebrikler! Oyunu kazandınız!";
+                    congratulationsMessage.style.color = "green";
+
+                    // Yeni oyun yükleniyor mesajını göster
+                    const loadingMessage = document.createElement("div");
+                    loadingMessage.textContent = "Yeni oyun yükleniyor...";
+                    loadingMessage.style.fontSize = "24px";
+                    loadingMessage.style.color = "green";
+                    document.getElementById("game-container").appendChild(loadingMessage);
+
+                    // Yeni oyunu başlatmak için bir süre bekleyip ardından sıfırla
+                    setTimeout(() => {
+                        resetGameWinner();
+                        document.getElementById("game-container").removeChild(loadingMessage);
+                    }, 2000);
                 } else {
                     congratulationsMessage.textContent = "Tebrikler! Doğru Kelime!";
                 }
@@ -345,8 +358,6 @@
         }
 
 
-
-
         // Oyunu sıfırlama
         function resetDisplay() {
             wordDisplay.innerHTML = "";
@@ -358,7 +369,6 @@
             congratulationsMessage.textContent = "";
             countdownDisplay.textContent = "";
             gameOverMessage.textContent = "";
-
 
         }
 
@@ -390,6 +400,50 @@
                 startGame();
             }
         }
+
+        function resetGameWinner() {
+            // Yeni oyun yükleniyor mesajını göster
+            const loadingMessage = document.createElement("div");
+            loadingMessage.textContent = "Yeni oyun yükleniyor...";
+            loadingMessage.style.fontSize = "24px";
+            loadingMessage.style.color = "green";
+            loadingMessage.id = "loading-message";
+            document.getElementById("game-container").appendChild(loadingMessage);
+
+            setTimeout(() => {
+                // Puanı sıfırla
+                score = 0;
+
+                // Diğer değişkenleri sıfırla
+                guessedWords = {
+                    correct: [],
+                    wrong: []
+                };
+
+                // Yeni oyun yükleniyor mesajını kaldır
+                const loadingMessageElement = document.getElementById("loading-message");
+                if (loadingMessageElement) {
+                    loadingMessageElement.parentNode.removeChild(loadingMessageElement);
+
+                    // Ek olarak, kazandınız mesajını ve bildiğiniz kelimeleri temizle
+                    const congratulationsMessageElement = document.getElementById("congratulations-message");
+                    if (congratulationsMessageElement) {
+                        congratulationsMessageElement.textContent = "";
+                    }
+
+                    // Bildiğiniz kelimeleri temizle
+                    const guessedWordDisplay = document.getElementById("guessed-word");
+                    if (guessedWordDisplay) {
+                        guessedWordDisplay.textContent = "";
+                    }
+
+                    // Oyunu başlat
+                    startGame();
+                }
+            }, 2000);
+        }
+
+
     </script>
 </body>
 
