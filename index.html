@@ -296,7 +296,7 @@
 
         // Oyun bitimi kontrolü (Kazanma ve kaybetme durumları)
         function checkGame() {
-            if (score >= 500 && !foundLetters.includes(false)) {
+            if (score >= 2000 && !foundLetters.includes(false)) {
                 guessedWords.correct.push(selectedWord);
                 guessedWordDisplay.innerHTML = "Bildiğiniz Kelimeler: " + guessedWords.correct.join(", ");
                 endGame(true, false);
@@ -325,7 +325,7 @@
             keyboard.innerHTML = "";
 
             if (isWinner) {
-                if (score >= 500) {
+                if (score >= 2000) {
                     congratulationsMessage.textContent = "Tebrikler! Oyunu kazandınız!";
                     congratulationsMessage.style.color = "green";
 
