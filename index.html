@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +16,8 @@
             min-height: 100vh;
         }
 
-        header, footer {
+        header,
+        footer {
             background-color: black;
             color: white;
             text-align: center;
@@ -152,6 +154,7 @@
     </script>
     <title>Kelime Bulma Oyunu</title>
 </head>
+
 <body>
     <header>
         <div class="info-bar">
@@ -160,7 +163,7 @@
     </header>
 
     <div id="game-container">
-  
+
         <div id="word-display"></div>
         <div id="keyboard"></div>
         <div id="correct-letters">Bulunan Harfler: <span id="found-letters"></span></div>
@@ -182,12 +185,13 @@
             <a href="https://www.w3schools.com/js/" target="_blank">https://www.w3schools.com/js/</a>
             <a href="https://devdocs.io/javascript/" target="_blank">https://devdocs.io/javascript/</a>
             <a href="https://javascript.info/" target="_blank">https://javascript.info/</a>
-            <a href="https://github.com/Asabeneh/30-Days-Of-JavaScript" target="_blank">https://github.com/Asabeneh/30-Days-Of-JavaScript</a>
+            <a href="https://github.com/Asabeneh/30-Days-Of-JavaScript"
+                target="_blank">https://github.com/Asabeneh/30-Days-Of-JavaScript</a>
         </div>
     </footer>
 
     <script>
-        
+
         const words = ["JAVASCRIPT", "HTML", "CSS", "WEB", "CODING", "DEVELOPER", "PROGRAMMING", "CHALLENGE", "KEYBOARD", "COMPUTER"];
         let selectedWord = "";
         let foundLetters = [];
@@ -291,18 +295,26 @@
             }
         }
 
-        // Oyun durum kontrolü (Kazanma ve kaybetme durumları)
+        // Oyun bitimi kontrolü (Kazanma ve kaybetme durumları)
         function checkGame() {
-            if (score >= 1000) {
+            if (score >= 3000) {
                 guessedWords.correct.push(selectedWord);
                 guessedWordDisplay.innerHTML = "Bildiğiniz Kelimeler: " + guessedWords.correct.join(", ");
                 endGame(true, false);
-            } else if (!foundLetters.includes(false) || score >= 3000) {
-                guessedWords.correct.push(selectedWord);
-                guessedWordDisplay.innerHTML = "Bildiğiniz Kelimeler: " + guessedWords.correct.join(", ");
-                endGame(true, false);
+            } else if (!foundLetters.includes(false) || chances === 0) {
+                if (!foundLetters.includes(false)) {
+                    countdownDisplay.textContent = "3";
+                    countdownInterval = setInterval(() => {
+                        countdownValue--;
+                        countdownDisplay.textContent = countdownValue;
+                        if (countdownValue === 0) {
+                            clearInterval(countdownInterval);
+                            countdownDisplay.textContent = "";
+                            startGame();
+                        }
+                    }, 1000);
+                }
             }
-        
             if (chances === 0) {
                 guessedWords.wrong.push(selectedWord);
                 guessedWordDisplay.innerHTML = "Doğru Bilinen Kelimeler: " + guessedWords.correct.join(", ") + "<br>Yanlış Bilinen Kelimeler: " + guessedWords.wrong.join(", ");
@@ -311,11 +323,15 @@
         }
 
         // Oyun bitimi kontrolü
-        function endGame(isWinner, fromTimeout, isWinnerByScore) {
+        function endGame(isWinner, fromTimeout) {
             keyboard.innerHTML = "";
-        
+
             if (isWinner) {
-                congratulationsMessage.textContent = "Tebrikler! Doğru Kelime!";
+                if (score >= 1000) {
+                    congratulationsMessage.textContent = "Tebrikler! Oyunu kazandınız!";
+                } else {
+                    congratulationsMessage.textContent = "Tebrikler! Doğru Kelime!";
+                }
             } else {
                 if (chances === 0) {
                     if (!fromTimeout) {
@@ -327,11 +343,8 @@
                     gameOverMessage.addEventListener("click", () => resetGame());
                 }
             }
-        
-            if (isWinnerByScore) {
-                congratulationsMessage.textContent = "Tebrikler! Oyunu 3000 puanla kazandınız!";
-            }
         }
+
 
         // Oyunu sıfırlama
         function resetDisplay() {
@@ -345,7 +358,7 @@
             countdownDisplay.textContent = "";
             gameOverMessage.textContent = "";
 
-            
+
         }
 
         // Oyunu başlatma
@@ -367,7 +380,7 @@
             if (confirmation) {
                 score = 0;
                 resetDisplay();
-                
+
                 guessedWords = {
                     correct: [],
                     wrong: []
@@ -378,4 +391,5 @@
         }
     </script>
 </body>
+
 </html>
