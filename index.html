@@ -293,16 +293,20 @@
 
         // Oyun durum kontrolü (Kazanma ve kaybetme durumları)
         function checkGame() {
-            if (!foundLetters.includes(false)) {
+            if (score >= 3000) {
                 guessedWords.correct.push(selectedWord);
                 guessedWordDisplay.innerHTML = "Bildiğiniz Kelimeler: " + guessedWords.correct.join(", ");
-                endGame(true, false, true);
+                endGame(true, false);
+            } else if (!foundLetters.includes(false) || score >= 3000) {
+                guessedWords.correct.push(selectedWord);
+                guessedWordDisplay.innerHTML = "Bildiğiniz Kelimeler: " + guessedWords.correct.join(", ");
+                endGame(true, false);
             }
         
             if (chances === 0) {
                 guessedWords.wrong.push(selectedWord);
                 guessedWordDisplay.innerHTML = "Doğru Bilinen Kelimeler: " + guessedWords.correct.join(", ") + "<br>Yanlış Bilinen Kelimeler: " + guessedWords.wrong.join(", ");
-                endGame(false, false, false);
+                endGame(false, false);
             }
         }
 
