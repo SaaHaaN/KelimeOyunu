@@ -301,33 +301,29 @@
                 guessedWords.correct.push(selectedWord);
                 guessedWordDisplay.innerHTML = "Bildiğiniz Kelimeler: " + guessedWords.correct.join(", ");
                 endGame(true, false);
-            } else if (!foundLetters.includes(false) || chances === 0) {
-                if (!foundLetters.includes(false)) {
-                    countdownDisplay.textContent = "3";
-                    countdownInterval = setInterval(() => {
-                        countdownValue--;
-                        countdownDisplay.textContent = countdownValue;
-                        if (countdownValue === 0) {
-                            clearInterval(countdownInterval);
-                            countdownDisplay.textContent = "";
-                            startGame();
-                        }
-                    }, 1000);
-                }
-            }
-            if (chances === 0) {
+            } else if (!foundLetters.includes(false) && chances !== 0) {
+                countdownDisplay.textContent = "3";
+                countdownInterval = setInterval(() => {
+                    countdownValue--;
+                    countdownDisplay.textContent = countdownValue;
+                    if (countdownValue === 0) {
+                        clearInterval(countdownInterval);
+                        countdownDisplay.textContent = "";
+                        startGame();
+                    }
+                }, 1000);
+            } else if (chances === 0) {
                 guessedWords.wrong.push(selectedWord);
                 guessedWordDisplay.innerHTML = "Doğru Bilinen Kelimeler: " + guessedWords.correct.join(", ") + "<br>Yanlış Bilinen Kelimeler: " + guessedWords.wrong.join(", ");
                 endGame(false, false);
             }
         }
 
-        // Oyun bitimi kontrolü
         function endGame(isWinner, fromTimeout) {
             keyboard.innerHTML = "";
 
             if (isWinner) {
-                if (score >= 1000) {
+                if (score >= 3000) {
                     congratulationsMessage.textContent = "Tebrikler! Oyunu kazandınız!";
                 } else {
                     congratulationsMessage.textContent = "Tebrikler! Doğru Kelime!";
@@ -344,6 +340,7 @@
                 }
             }
         }
+
 
 
         // Oyunu sıfırlama
