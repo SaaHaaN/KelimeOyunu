@@ -235,6 +235,7 @@
 
 
 
+
     <footer>
         <div class="reference-bar">
             <h2>Referanslar</h2>
@@ -329,6 +330,7 @@
                     wordDisplay.innerHTML += "_ ";
                 }
             }
+
             foundLettersDisplay.textContent = selectedWord.split("").filter((letter, index) => foundLetters[index]).join(", ");
             missedLettersDisplay.textContent = missedLetters.join(", ");
             scoreValueDisplay.textContent = score;
@@ -347,8 +349,15 @@
                         }
                     }, 1000);
                 }
+
+                // Kelime bilindiğinde ekranda gösterme
+                if (!foundLetters.includes(false)) {
+                    guessedWordDisplay.textContent = `Bildiğiniz Kelime: ${selectedWord}`;
+                }
             }
         }
+
+
 
         // Oyun bitimi kontrolü (Kazanma ve kaybetme durumları)
         function checkGame() {
@@ -375,6 +384,10 @@
                 guessedWordDisplay.innerHTML = "Doğru Bilinen Kelimeler: " + guessedWords.correct.join(", ") + "<br>Yanlış Bilinen Kelimeler: " + guessedWords.wrong.join(", ");
                 endGame(false, false);
             }
+
+            // Bilinen kelimeleri göster
+            const guessedWordsContainer = document.getElementById("guessed-words-container");
+            guessedWordsContainer.innerHTML = "Bildiğiniz Kelimeler: " + guessedWords.correct.join(", ") + "<br>Yanlış Bilinen Kelimeler: " + guessedWords.wrong.join(", ");
         }
 
         function endGame(isWinner, fromTimeout) {
@@ -403,7 +416,7 @@
             } else {
                 if (chances === 0) {
                     if (!fromTimeout) {
-                        gameOverMessage.innerHTML = "<span style='color: red; font-size: 24px;'>Hakkınız Bitti!</span>";
+                        gameOverMessage.innerHTML = "<span style='color: red; font-size: 24px;'>Hakkınız Bitti! Yeniden Başlamak İçin Buraya Dokun</span>";
                         gameOverMessage.addEventListener("click", () => resetGame());
                     }
                 } else if (score <= -1000) {
@@ -430,7 +443,12 @@
 
         // Oyunu başlatma
         function startGame() {
-            selectedWord = words[Math.floor(Math.random() * words.length)];
+            let newWord;
+            do {
+                newWord = words[Math.floor(Math.random() * words.length)];
+            } while (newWord === selectedWord);
+
+            selectedWord = newWord;
             foundLetters = Array(selectedWord.length).fill(false);
             missedLetters = [];
             chances = 10;
@@ -440,6 +458,7 @@
             updateDisplay();
             createKeyboard();
         }
+
 
         // Oyunu sıfırlama
         function resetGame() {
@@ -457,6 +476,7 @@
             }
         }
 
+        // Oyunu kazanınca sıfırlama
         function resetGameWinner() {
             // Yeni oyun yükleniyor mesajını göster
             const loadingMessage = document.createElement("div");
@@ -499,19 +519,31 @@
             }, 2000);
         }
 
+        // Fonksiyonları tanımla
+        function showRules() {
+            const rulesTooltipContent = document.getElementById("rules-tooltip-content");
+            rulesTooltipContent.style.display = "block";
+        }
+
+        function hideRules() {
+            const rulesTooltipContent = document.getElementById("rules-tooltip-content");
+            rulesTooltipContent.style.display = "none";
+        }
+
         // Kuralların görüntülenmesi
         document.addEventListener("DOMContentLoaded", function () {
             const rulesTooltip = document.getElementById("rules-tooltip");
             const rulesTooltipContent = document.getElementById("rules-tooltip-content");
 
             rulesTooltip.addEventListener("mouseover", function () {
-                rulesTooltipContent.style.display = "block";
+                showRules();
             });
 
             rulesTooltip.addEventListener("mouseout", function () {
-                rulesTooltipContent.style.display = "none";
+                hideRules();
             });
         });
+
 
     </script>
 </body>
