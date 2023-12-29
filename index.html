@@ -321,39 +321,40 @@
         }
 
         // Ekran güncelleme
-        wordDisplay.innerHTML = "";
-        for (let i = 0; i < selectedWord.length; i++) {
-            if (foundLetters[i]) {
-                wordDisplay.innerHTML += `<span class="correct">${selectedWord[i]}</span> `;
-            } else {
-                wordDisplay.innerHTML += "_ ";
-            }
-        }
-
-        foundLettersDisplay.textContent = selectedWord.split("").filter((letter, index) => foundLetters[index]).join(", ");
-        missedLettersDisplay.textContent = missedLetters.join(", ");
-        scoreValueDisplay.textContent = score;
-        chancesDisplay.textContent = chances;
-
-        if (!foundLetters.includes(false) || chances === 0) {
-            if (!foundLetters.includes(false)) {
-                countdownDisplay.textContent = "3";
-                countdownInterval = setInterval(() => {
-                    countdownValue--;
-                    countdownDisplay.textContent = countdownValue;
-                    if (countdownValue === 0) {
-                        clearInterval(countdownInterval);
-                        countdownDisplay.textContent = "";
-                        startGame();
-                    }
-                }, 1000);
+        function updateDisplay() {
+            wordDisplay.innerHTML = "";
+            for (let i = 0; i < selectedWord.length; i++) {
+                if (foundLetters[i]) {
+                    wordDisplay.innerHTML += `<span class="correct">${selectedWord[i]}</span> `;
+                } else {
+                    wordDisplay.innerHTML += "_ ";
+                }
             }
 
-            // Kelime bilindiğinde ekranda gösterme
-            if (!foundLetters.includes(false)) {
-                guessedWordDisplay.textContent = `Bildiğiniz Kelime: ${selectedWord}`;
+            foundLettersDisplay.textContent = selectedWord.split("").filter((letter, index) => foundLetters[index]).join(", ");
+            missedLettersDisplay.textContent = missedLetters.join(", ");
+            scoreValueDisplay.textContent = score;
+            chancesDisplay.textContent = chances;
+
+            if (!foundLetters.includes(false) || chances === 0) {
+                if (!foundLetters.includes(false)) {
+                    countdownDisplay.textContent = "3";
+                    countdownInterval = setInterval(() => {
+                        countdownValue--;
+                        countdownDisplay.textContent = countdownValue;
+                        if (countdownValue === 0) {
+                            clearInterval(countdownInterval);
+                            countdownDisplay.textContent = "";
+                            startGame();
+                        }
+                    }, 1000);
+                }
+
+                // Kelime bilindiğinde ekranda gösterme
+                if (!foundLetters.includes(false)) {
+                    guessedWordDisplay.textContent = `Bildiğiniz Kelime: ${selectedWord}`;
+                }
             }
-        }
         }
 
 
@@ -378,165 +379,170 @@
                         }
                     }, 1000);
                 }
-
-                // Bilinen kelimeleri göster
-                const guessedWordsContainer = document.getElementById("guessed-words-container");
-                guessedWordsContainer.innerHTML = "Bildiğiniz Kelimeler: " + guessedWords.correct.join(", ") + "<br>Yanlış Bilinen Kelimeler: " + guessedWords.wrong.join(", ");
+            } else if (chances === 0) {
+                guessedWords.wrong.push(selectedWord);
+                guessedWordDisplay.innerHTML = "Doğru Bilinen Kelimeler: " + guessedWords.correct.join(", ") + "<br>Yanlış Bilinen Kelimeler: " + guessedWords.wrong.join(", ");
+                endGame(false, false);
             }
 
-            function endGame(isWinner, fromTimeout) {
-                keyboard.innerHTML = "";
+            // Bilinen kelimeleri göster
+            const guessedWordsContainer = document.getElementById("guessed-words-container");
+            guessedWordsContainer.innerHTML = "Bildiğiniz Kelimeler: " + guessedWords.correct.join(", ") + "<br>Yanlış Bilinen Kelimeler: " + guessedWords.wrong.join(", ");
+        }
 
-                if (isWinner) {
-                    if (score >= 2000) {
-                        congratulationsMessage.textContent = "Tebrikler! Oyunu kazandınız!";
-                        congratulationsMessage.style.color = "green";
+        function endGame(isWinner, fromTimeout) {
+            keyboard.innerHTML = "";
 
-                        // Yeni oyun yükleniyor mesajını göster
-                        const loadingMessage = document.createElement("div");
-                        loadingMessage.textContent = "Yeni oyun yükleniyor...";
-                        loadingMessage.style.fontSize = "24px";
-                        loadingMessage.style.color = "green";
-                        document.getElementById("game-container").appendChild(loadingMessage);
+            if (isWinner) {
+                if (score >= 2000) {
+                    congratulationsMessage.textContent = "Tebrikler! Oyunu kazandınız!";
+                    congratulationsMessage.style.color = "green";
 
-                        // Yeni oyunu başlatmak için bir süre bekleyip ardından sıfırla
-                        setTimeout(() => {
-                            resetGameWinner();
-                            document.getElementById("game-container").removeChild(loadingMessage);
-                        }, 2000);
-                    } else {
-                        congratulationsMessage.textContent = "Tebrikler! Doğru Kelime!";
-                    }
+                    // Yeni oyun yükleniyor mesajını göster
+                    const loadingMessage = document.createElement("div");
+                    loadingMessage.textContent = "Yeni oyun yükleniyor...";
+                    loadingMessage.style.fontSize = "24px";
+                    loadingMessage.style.color = "green";
+                    document.getElementById("game-container").appendChild(loadingMessage);
+
+                    // Yeni oyunu başlatmak için bir süre bekleyip ardından sıfırla
+                    setTimeout(() => {
+                        resetGameWinner();
+                        document.getElementById("game-container").removeChild(loadingMessage);
+                    }, 2000);
                 } else {
-                    if (chances === 0) {
-                        if (!fromTimeout) {
-                            gameOverMessage.innerHTML = "<span style='color: red; font-size: 24px;'>Hakkınız Bitti! Yeniden Başlamak İçin Buraya Dokun</span>";
-                            gameOverMessage.addEventListener("click", () => resetGame());
-                        }
-                    } else if (score <= -1000) {
-                        gameOverMessage.innerHTML = "<span style='color: red; font-size: 24px; cursor: pointer; text-decoration: underline;'>Kaybettiniz -500 puan oldun. Yeni oyuna başlamak için tıklayınız.</span>";
+                    congratulationsMessage.textContent = "Tebrikler! Doğru Kelime!";
+                }
+            } else {
+                if (chances === 0) {
+                    if (!fromTimeout) {
+                        gameOverMessage.innerHTML = "<span style='color: red; font-size: 24px;'>Hakkınız Bitti! Yeniden Başlamak İçin Buraya Dokun</span>";
                         gameOverMessage.addEventListener("click", () => resetGame());
                     }
+                } else if (score <= -1000) {
+                    gameOverMessage.innerHTML = "<span style='color: red; font-size: 24px; cursor: pointer; text-decoration: underline;'>Kaybettiniz -500 puan oldun. Yeni oyuna başlamak için tıklayınız.</span>";
+                    gameOverMessage.addEventListener("click", () => resetGame());
                 }
             }
+        }
 
 
-            // Oyunu sıfırlama
-            function resetDisplay() {
-                wordDisplay.innerHTML = "";
-                foundLettersDisplay.textContent = "";
-                missedLettersDisplay.textContent = "";
-                scoreValueDisplay.textContent = "";
-                chancesDisplay.textContent = "";
-                guessedWordDisplay.textContent = "";
-                congratulationsMessage.textContent = "";
-                countdownDisplay.textContent = "";
-                gameOverMessage.textContent = "";
+        // Oyunu sıfırlama
+        function resetDisplay() {
+            wordDisplay.innerHTML = "";
+            foundLettersDisplay.textContent = "";
+            missedLettersDisplay.textContent = "";
+            scoreValueDisplay.textContent = "";
+            chancesDisplay.textContent = "";
+            guessedWordDisplay.textContent = "";
+            congratulationsMessage.textContent = "";
+            countdownDisplay.textContent = "";
+            gameOverMessage.textContent = "";
 
+        }
+
+        // Oyunu başlatma
+        function startGame() {
+            let newWord;
+            do {
+                newWord = words[Math.floor(Math.random() * words.length)];
+            } while (newWord === selectedWord);
+
+            selectedWord = newWord;
+            foundLetters = Array(selectedWord.length).fill(false);
+            missedLetters = [];
+            chances = 10;
+            countdownValue = 3;
+            newWordButtonEnabled = true;
+
+            updateDisplay();
+            createKeyboard();
+        }
+
+
+        // Oyunu sıfırlama
+        function resetGame() {
+            const confirmation = window.confirm("Oyuna başlamak istiyor musunuz?");
+            if (confirmation) {
+                score = 0;
+                resetDisplay();
+
+                guessedWords = {
+                    correct: [],
+                    wrong: []
+                };
+                guessedWordDisplay.innerHTML = "";
+                startGame();
             }
+        }
 
-            // Oyunu başlatma
-            function startGame() {
-                let newWord;
-                do {
-                    newWord = words[Math.floor(Math.random() * words.length)];
-                } while (newWord === selectedWord);
+        // Oyunu kazanınca sıfırlama
+        function resetGameWinner() {
+            // Yeni oyun yükleniyor mesajını göster
+            const loadingMessage = document.createElement("div");
+            loadingMessage.textContent = "Yeni oyun yükleniyor...";
+            loadingMessage.style.fontSize = "24px";
+            loadingMessage.style.color = "green";
+            loadingMessage.id = "loading-message";
+            document.getElementById("game-container").appendChild(loadingMessage);
 
-                selectedWord = newWord;
-                foundLetters = Array(selectedWord.length).fill(false);
-                missedLetters = [];
-                chances = 10;
-                countdownValue = 3;
-                newWordButtonEnabled = true;
+            setTimeout(() => {
+                // Puanı sıfırla
+                score = 0;
 
-                updateDisplay();
-                createKeyboard();
-            }
+                // Diğer değişkenleri sıfırla
+                guessedWords = {
+                    correct: [],
+                    wrong: []
+                };
 
+                // Yeni oyun yükleniyor mesajını kaldır
+                const loadingMessageElement = document.getElementById("loading-message");
+                if (loadingMessageElement) {
+                    loadingMessageElement.parentNode.removeChild(loadingMessageElement);
 
-            // Oyunu sıfırlama
-            function resetGame() {
-                const confirmation = window.confirm("Oyuna başlamak istiyor musunuz?");
-                if (confirmation) {
-                    score = 0;
-                    resetDisplay();
+                    // Kazandınız mesajını yaz kaldır
+                    const congratulationsMessageElement = document.getElementById("congratulations-message");
+                    if (congratulationsMessageElement) {
+                        congratulationsMessageElement.textContent = "";
+                    }
 
-                    guessedWords = {
-                        correct: [],
-                        wrong: []
-                    };
-                    guessedWordDisplay.innerHTML = "";
+                    // Bildiğiniz kelimeleri temizle
+                    const guessedWordDisplay = document.getElementById("guessed-word");
+                    if (guessedWordDisplay) {
+                        guessedWordDisplay.textContent = "";
+                    }
+
+                    // Oyunu başlat
                     startGame();
                 }
-            }
+            }, 2000);
+        }
 
-            // Oyunu kazanınca sıfırlama
-            function resetGameWinner() {
-                // Yeni oyun yükleniyor mesajını göster
-                const loadingMessage = document.createElement("div");
-                loadingMessage.textContent = "Yeni oyun yükleniyor...";
-                loadingMessage.style.fontSize = "24px";
-                loadingMessage.style.color = "green";
-                loadingMessage.id = "loading-message";
-                document.getElementById("game-container").appendChild(loadingMessage);
+        // Fonksiyonları tanımla
+        function showRules() {
+            const rulesTooltipContent = document.getElementById("rules-tooltip-content");
+            rulesTooltipContent.style.display = "block";
+        }
 
-                setTimeout(() => {
-                    // Puanı sıfırla
-                    score = 0;
+        function hideRules() {
+            const rulesTooltipContent = document.getElementById("rules-tooltip-content");
+            rulesTooltipContent.style.display = "none";
+        }
 
-                    // Diğer değişkenleri sıfırla
-                    guessedWords = {
-                        correct: [],
-                        wrong: []
-                    };
+        // Kuralların görüntülenmesi
+        document.addEventListener("DOMContentLoaded", function () {
+            const rulesTooltip = document.getElementById("rules-tooltip");
+            const rulesTooltipContent = document.getElementById("rules-tooltip-content");
 
-                    // Yeni oyun yükleniyor mesajını kaldır
-                    const loadingMessageElement = document.getElementById("loading-message");
-                    if (loadingMessageElement) {
-                        loadingMessageElement.parentNode.removeChild(loadingMessageElement);
-
-                        // Kazandınız mesajını yaz kaldır
-                        const congratulationsMessageElement = document.getElementById("congratulations-message");
-                        if (congratulationsMessageElement) {
-                            congratulationsMessageElement.textContent = "";
-                        }
-
-                        // Bildiğiniz kelimeleri temizle
-                        const guessedWordDisplay = document.getElementById("guessed-word");
-                        if (guessedWordDisplay) {
-                            guessedWordDisplay.textContent = "";
-                        }
-
-                        // Oyunu başlat
-                        startGame();
-                    }
-                }, 2000);
-            }
-
-            // Fonksiyonları tanımla
-            function showRules() {
-                const rulesTooltipContent = document.getElementById("rules-tooltip-content");
-                rulesTooltipContent.style.display = "block";
-            }
-
-            function hideRules() {
-                const rulesTooltipContent = document.getElementById("rules-tooltip-content");
-                rulesTooltipContent.style.display = "none";
-            }
-
-            // Kuralların görüntülenmesi
-            document.addEventListener("DOMContentLoaded", function () {
-                const rulesTooltip = document.getElementById("rules-tooltip");
-                const rulesTooltipContent = document.getElementById("rules-tooltip-content");
-
-                rulesTooltip.addEventListener("mouseover", function () {
-                    showRules();
-                });
-
-                rulesTooltip.addEventListener("mouseout", function () {
-                    hideRules();
-                });
+            rulesTooltip.addEventListener("mouseover", function () {
+                showRules();
             });
+
+            rulesTooltip.addEventListener("mouseout", function () {
+                hideRules();
+            });
+        });
 
 
     </script>
