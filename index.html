@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="./favicon.ico">
     <style>
         body {
             margin: 0;
@@ -214,7 +213,6 @@
             <div id="new-game-button" class="button" onclick="resetGame()">Oyunu Sıfırla</div>
         </div>
         <div id="word-display"></div>
-        <div id="guessed-words-container"></div>
     </div>
 
     <div id="rules-tooltip" onmouseover="showRules()" onmouseout="hideRules()">?</div>
@@ -285,7 +283,6 @@
         // Klavye oluşturma
         function createKeyboard() {
             keyboard.innerHTML = "";
-            wordDisplay.innerHTML = "";
             for (let i = 65; i <= 90; i++) {
                 const letter = String.fromCharCode(i);
                 const button = document.createElement("div");
@@ -367,7 +364,7 @@
 
         // Oyun bitimi kontrolü (Kazanma ve kaybetme durumları)
         function checkGame() {
-            if (score >= 2000 && !foundLetters.includes(false)) {
+                        if (score >= 2000 && !foundLetters.includes(false)) {
                 guessedWords.correct.push(selectedWord);
                 guessedWordDisplay.innerHTML = "Bildiğiniz Kelimeler: " + guessedWords.correct.join(", ");
                 endGame(true, false);
@@ -526,15 +523,6 @@
             }, 2000);
         }
 
-
-        const guessedWordsContainer = document.getElementById("guessed-words-container");
-        if (guessedWordsContainer) {
-            guessedWordsContainer.innerHTML = "Bildiğiniz Kelimeler: " + guessedWords.correct.join(", ") + "<br>Yanlış Bilinen Kelimeler: " + guessedWords.wrong.join(", ");
-        } else {
-            console.error("guessed-words-container elementi bulunamadı.");
-        }
-
-
         // Fonksiyonları tanımla
         function showRules() {
             const rulesTooltipContent = document.getElementById("rules-tooltip-content");
@@ -559,10 +547,6 @@
                 hideRules();
             });
         });
-
-
-
-
 
     </script>
 </body>
