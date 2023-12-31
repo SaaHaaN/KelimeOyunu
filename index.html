@@ -199,7 +199,6 @@
 
     <!-- Oyun alanı -->
     <div id="game-container">
-
         <div id="word-display"></div>
         <div id="keyboard"></div>
         <div id="correct-letters">Bulunan Harfler: <span id="found-letters"></span></div>
@@ -215,7 +214,6 @@
         </div>
         <div id="word-display"></div>
         <div id="guessed-words-container"></div>
-
     </div>
 
     <div id="rules-tooltip" onmouseover="showRules()" onmouseout="hideRules()">?</div>
@@ -236,9 +234,6 @@
             <li>Bildiğiniz kelimeler altta görüntülenir.</li>
         </ul>
     </div>
-
-
-
 
     <footer>
         <div class="reference-bar">
@@ -265,8 +260,6 @@
         let countdownInterval;
         let countdownValue = 3;
         let newWordButtonEnabled = true;
-
-
 
         // Değişkenler...
         const wordDisplay = document.getElementById("word-display");
@@ -367,7 +360,7 @@
 
         // Oyun bitimi kontrolü (Kazanma ve kaybetme durumları)
         function checkGame() {
-                        if (score >= 2000 && !foundLetters.includes(false)) {
+            if (score >= 2000 && !foundLetters.includes(false)) {
                 guessedWords.correct.push(selectedWord);
                 guessedWordDisplay.innerHTML = "Bildiğiniz Kelimeler: " + guessedWords.correct.join(", ");
                 endGame(true, false);
@@ -390,10 +383,6 @@
                 guessedWordDisplay.innerHTML = "Doğru Bilinen Kelimeler: " + guessedWords.correct.join(", ") + "<br>Yanlış Bilinen Kelimeler: " + guessedWords.wrong.join(", ");
                 endGame(false, false);
             }
-
-            // Bilinen kelimeleri göster
-            const guessedWordsContainer = document.getElementById("guessed-words-container");
-            guessedWordsContainer.innerHTML = "Bildiğiniz Kelimeler: " + guessedWords.correct.join(", ") + "<br>Yanlış Bilinen Kelimeler: " + guessedWords.wrong.join(", ");
 
         }
 
@@ -494,10 +483,8 @@
             document.getElementById("game-container").appendChild(loadingMessage);
 
             setTimeout(() => {
-                // Puanı sıfırla
                 score = 0;
 
-                // Diğer değişkenleri sıfırla
                 guessedWords = {
                     correct: [],
                     wrong: []
@@ -550,10 +537,6 @@
                 hideRules();
             });
         });
-
-
-
-
 
     </script>
 </body>
